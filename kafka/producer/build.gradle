@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    // Apply the application plugin to add support for building CLI applications
+    id 'application'
+    // Apply shadow plugin for creating fat/uber JARs
+    id 'com.github.johnrengelman.shadow' version '7.1.2' // Use a recent version
+}
+
+group = 'com.kafka.producer'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '21' // Or your desired Java version >= 11
+targetCompatibility = '21'
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+    // Kafka Client dependency
+    implementation 'org.apache.kafka:kafka-clients:3.3.2' // Match Kafka version if possible
+
+    // Logging dependencies (SLF4j API and a simple implementation)
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    runtimeOnly 'org.slf4j:slf4j-simple:1.7.32' // Use runtimeOnly for implementations
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'com.kafka.producer.SimpleProducer'
+}
+
+// Configure the shadowJar task (creates the fat JAR)
+shadowJar {
+    archiveBaseName = 'kafka-producer-poc' // Name of the output JAR
+    archiveClassifier = '' // Optional: Set to null or empty to avoid '-all' suffix
+    archiveVersion = project.version // Use the project version
+    // Merges service files correctly if needed (less common for simple clients)
+    // mergeServiceFiles()
+}
+
+// Optional: Make shadowJar run when 'build' is executed
+// tasks.named('build') {
+//    dependsOn tasks.named('shadowJar')
+// }
+
+// Optional: Disable the standard thin JAR task if you only want the shadow JAR
+jar {
+    enabled = false
+}

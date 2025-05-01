@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group = 'com.kafka.consumer'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '21'
+targetCompatibility = '21'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.kafka:kafka-clients:3.3.2'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    runtimeOnly 'org.slf4j:slf4j-simple:1.7.32'
+}
+
+application {
+    // Define the main class for the consumer application.
+    mainClass = 'com.kafka.consumer.SimpleConsumer' // <-- Change this
+}
+
+shadowJar {
+    archiveBaseName = 'kafka-consumer-poc' // <-- Optional: Change base name
+    archiveClassifier = ''
+    archiveVersion = project.version
+    // mergeServiceFiles()
+}
+
+jar {
+    enabled = false
+}
